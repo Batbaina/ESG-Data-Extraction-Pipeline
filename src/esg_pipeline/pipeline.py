@@ -35,10 +35,7 @@ def run(path: Path, output_dir: Path, text_column="text", limit=None):
     settings = Settings()
     prompt = load_prompt(settings.prompt_version)
     generation = settings.generation_options()
-    client = OllamaClient(
-        settings.ollama_url, settings.model, generation,
-        timeout=settings.request_timeout_seconds,
-    )
+    client = create_llm_backend(settings)
     records = load_input(path, settings, text_column, limit)
     rows, ready = [], []
 

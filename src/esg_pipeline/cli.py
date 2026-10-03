@@ -12,10 +12,7 @@ console = Console()
 
 
 def _client(settings: Settings):
-    return OllamaClient(
-        settings.ollama_url, settings.model, settings.generation_options(),
-        timeout=settings.request_timeout_seconds,
-    )
+    return create_llm_backend(settings)
 
 
 @app.command()
