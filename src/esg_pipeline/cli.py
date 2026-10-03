@@ -3,7 +3,7 @@ import typer
 from rich.console import Console
 from rich.table import Table
 from .config import Settings
-from .llm.ollama_client import OllamaClient
+from .llm import create_llm_backend
 from .pipeline import run
 from .exporters import finalize_review
 

@@ -12,6 +12,7 @@ def _env_bool(name: str, default: bool) -> bool:
 @dataclass(frozen=True)
 class Settings:
     # Model / runtime
+    llm_backend: str = os.getenv("ESG_LLM_BACKEND", "ollama")
     model: str = os.getenv("ESG_MODEL", "qwen3:8b")
     ollama_url: str = os.getenv("ESG_OLLAMA_URL", "http://localhost:11434").rstrip("/")
     request_timeout_seconds: float = float(os.getenv("ESG_REQUEST_TIMEOUT_SECONDS", "240"))
@@ -20,6 +21,7 @@ class Settings:
     prompt_version: str = os.getenv("ESG_PROMPT_VERSION", "v1")
 
     # Generation / reproducibility
+    enable_thinking: bool = os.getenv("ESG_ENABLE_THINKING", "false").lower() in {"1", "true", "yes", "on"}
     temperature: float = float(os.getenv("ESG_TEMPERATURE", "0.0"))
     top_p: float = float(os.getenv("ESG_TOP_P", "0.9"))
     top_k: int = int(os.getenv("ESG_TOP_K", "40"))

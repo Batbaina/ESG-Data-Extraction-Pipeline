@@ -6,7 +6,7 @@ from .prompts import load_prompt
 from .loaders.tabular import load_tabular
 from .loaders.text import load_text
 from .extractors.pdf_docling import load_pdf
-from .llm.ollama_client import OllamaClient
+from .llm import create_llm_backend
 from .quality.checks import check_unit
 from .exporters import write_jsonl, write_review_xlsx, write_json
 

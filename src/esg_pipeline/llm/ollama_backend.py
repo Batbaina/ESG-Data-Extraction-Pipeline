@@ -2,9 +2,10 @@ import json
 import httpx
 from pydantic import ValidationError
 from ..schemas.esg import ESGExtractionResult
+from .base import LLMBackend
 
 
-class OllamaClient:
+class OllamaBackend(LLMBackend):
     def __init__(self, base_url: str, model: str, generation_options: dict, timeout: float = 240.0):
         self.base_url = base_url.rstrip("/")
         self.model = model
