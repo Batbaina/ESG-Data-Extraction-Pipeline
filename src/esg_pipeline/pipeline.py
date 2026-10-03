@@ -65,10 +65,19 @@ def run(path: Path, output_dir: Path, text_column="text", limit=None):
             )
             if not result.usable:
                 rows.append({
-                    **base, "status": "valid_rejected", "usable": False,
-                    "rejection_reason": result.rejection_reason or "no_usable_esg_knowledge",
-                    "qc_pass": False, "qc_lexical_grounding": "",
-                    "qc_reasons": "not_usable", "llm_retry_count": retry_count,
+                    **base,
+                    **runtime,
+                    "status": "valid_rejected",
+                    "usable": False,
+                    "rejection_reason": (
+                        result.rejection_reason
+                        or "no_usable_esg_knowledge"
+                    ),
+                    "qc_pass": False,
+                    "qc_lexical_grounding": "",
+                    "qc_reasons": "not_usable",
+                    "llm_retry_count": retry_count,
+                    "llm_retry_errors": retry_errors,
                 })
                 continue
 
@@ -78,16 +87,23 @@ def run(path: Path, output_dir: Path, text_column="text", limit=None):
                     settings.qc_min_lexical_grounding, settings.require_source_supported,
                 )
                 row = {
-                    **base, "status": "valid", "usable": True, "rejection_reason": "",
-                    "pillar": unit.pillar, "topic": unit.topic,
+                    **base,
+                    **runtime,
+                    "status": "valid",
+                    "usable": True,
+                    "rejection_reason": "",
+                    "pillar": unit.pillar,
+                    "topic": unit.topic,
                     "knowledge_type": unit.knowledge_type,
                     "source_facts": " | ".join(unit.source_facts),
                     "extracted_knowledge": unit.extracted_knowledge,
+                    "source_supported": unit.source_supported,
                     "confidence": unit.confidence,
                     "qc_pass": qc.passed,
                     "qc_lexical_grounding": qc.lexical_grounding_score,
                     "qc_reasons": " | ".join(qc.reasons),
                     "llm_retry_count": retry_count,
+                    "llm_retry_errors": retry_errors,
                 }
                 rows.append(row)
                 if qc.passed:

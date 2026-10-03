@@ -29,15 +29,51 @@ def config():
 
 @app.command()
 def check():
+    """Check the configured LLM backend and model."""
     s = Settings()
     data = _client(s).check()
-    names = [m.get("name", "") for m in data.get("models", [])]
-    console.print(f"[green]Ollama reachable[/green]: {s.ollama_url}")
-    console.print(f"Configured model: [bold]{s.model}[/bold]")
-    if not any(n.startswith(s.model) for n in names):
-        console.print(f"[yellow]Model not found locally. Run: ollama pull {s.model}[/yellow]")
+
+    console.print(
+        f"Backend: [bold]{s.llm_backend}[/bold]"
+    )
+    console.print(
+        f"Model: [bold]{s.model}[/bold]"
+    )
+
+    if s.llm_backend.lower() == "ollama":
+        names = [
+            m.get("name", "")
+            for m in data.get("models", [])
+        ]
+
+        console.print(
+            f"Ollama API: [green]{s.ollama_url}[/green]"
+        )
+
+        if any(n.startswith(s.model) for n in names):
+            console.print(
+                "[green]Status: model installed and backend ready.[/green]"
+            )
+        else:
+            console.print(
+                f"[yellow]Status: model not installed. "
+                f"Run: ollama pull {s.model}[/yellow]"
+            )
+
+    elif s.llm_backend.lower() == "transformers":
+        device = data.get("device", "unknown")
+
+        console.print(
+            f"Device: [bold]{device}[/bold]"
+        )
+        console.print(
+            "[green]Status: model loaded and backend ready.[/green]"
+        )
+
     else:
-        console.print("[green]Configured model is installed.[/green]")
+        console.print(
+            f"[yellow]Backend response: {data}[/yellow]"
+        )
 
 
 @app.command()
